@@ -172,23 +172,23 @@ airflow-pressure-logger-esp32/
 +-- .gitignore              # PlatformIO, KiCad, and OS ignore patterns
 +-- platformio.ini          # PlatformIO build configuration
 +-- firmware/
-¦   +-- src/                # Modular C++ firmware source
-¦   ¦   +-- main.cpp        # Setup, main loop, and task dispatching
-¦   ¦   +-- config.h        # Central configuration, pins, and algorithm thresholds
-¦   ¦   +-- airflow.h/.cpp  # MPXV7002DP + ADS1115 sampling and IIR filtering
-¦   ¦   +-- breathing.h/.cpp# Phase detection, BPM, pause alert state machine
-¦   ¦   +-- bme280_reader.h/.cpp # Environmental secondary data reader
-¦   ¦   +-- ble_service.h/.cpp   # BLE GATT server and notification characteristics
-¦   ¦   +-- battery.h/.cpp  # Battery divider voltage reader & state of charge
-¦   ¦   +-- logger.h/.cpp   # Serial CSV telemetry and plotter output
-¦   +-- test/               # Unit test suites on synthetic and recorded waveforms
+Â¦   +-- src/                # Modular C++ firmware source
+Â¦   Â¦   +-- main.cpp        # Setup, main loop, and task dispatching
+Â¦   Â¦   +-- config.h        # Central configuration, pins, and algorithm thresholds
+Â¦   Â¦   +-- airflow.h/.cpp  # MPXV7002DP + ADS1115 sampling and IIR filtering
+Â¦   Â¦   +-- breathing.h/.cpp# Phase detection, BPM, pause alert state machine
+Â¦   Â¦   +-- bme280_reader.h/.cpp # Environmental secondary data reader
+Â¦   Â¦   +-- ble_service.h/.cpp   # BLE GATT server and notification characteristics
+Â¦   Â¦   +-- battery.h/.cpp  # Battery divider voltage reader & state of charge
+Â¦   Â¦   +-- logger.h/.cpp   # Serial CSV telemetry and plotter output
+Â¦   +-- test/               # Unit test suites on synthetic and recorded waveforms
 +-- dashboard/
-¦   +-- index.html          # Self-contained Web Bluetooth dashboard (HTML/CSS/JS)
+Â¦   +-- index.html          # Self-contained Web Bluetooth dashboard (HTML/CSS/JS)
 +-- hardware/
-¦   +-- wiring.md           # Pin tables and Mermaid circuit diagram
-¦   +-- bom.md              # Bill of Materials, Indian sourcing, and sensor physics
-¦   +-- flow-restrictor.md  # 3D printable mechanical tube design & calibration
-¦   +-- pcb-notes.md        # Layout rules for custom 2-layer KiCad PCB
+Â¦   +-- wiring.md           # Pin tables and Mermaid circuit diagram
+Â¦   +-- bom.md              # Bill of Materials, Indian sourcing, and sensor physics
+Â¦   +-- flow-restrictor.md  # 3D printable mechanical tube design & calibration
+Â¦   +-- pcb-notes.md        # Layout rules for custom 2-layer KiCad PCB
 +-- docs/
     +-- design-notes.md     # Fluid mechanics, algorithms, BLE packets, and power
     +-- calibration.md      # Zero-point and volume calibration procedures
@@ -203,8 +203,7 @@ airflow-pressure-logger-esp32/
 
 - **Author**: Vigneshwar S
 - **Academic Standing**: 2nd-year B.Tech in Electronics and Communication Engineering (ECE)
-- **Institution**: SRM Institute of Science and Technology, Kattankulathur, Chennai, India
-- **Areas of Interest**: Embedded Systems, PCB Design (KiCad), Biomedical Instrumentation, Low-Power IoT
+
 
 ---
 
