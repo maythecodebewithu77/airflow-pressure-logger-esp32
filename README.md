@@ -202,8 +202,6 @@ airflow-pressure-logger-esp32/
 ## Academic Author & Acknowledgments
 
 - **Author**: Vigneshwar S
-- **Academic Standing**: 2nd-year B.Tech in Electronics and Communication Engineering (ECE)
-- **Institution**: SRM Institute of Science and Technology, Kattankulathur, Chennai, India
 - **Areas of Interest**: Embedded Systems, PCB Design (KiCad), Biomedical Instrumentation, Low-Power IoT
 
 ---
