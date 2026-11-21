@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Airflow & Mask-Pressure Logger | Learning Prototype</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-teal: #2dd4bf;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-red: #f87171;
+            --canvas-bg: #0b1120;
+            --grid-line: #1e293b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-blue: #0284c7;
+            --accent-teal: #0d9488;
+            --accent-green: #059669;
+            --accent-amber: #d97706;
+            --accent-red: #dc2626;
+            --canvas-bg: #f8fafc;
+            --grid-line: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-primary); padding: 16px; min-height: 100vh; }
+        .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+        .disclaimer-banner { background-color: rgba(220, 38, 38, 0.12); border: 1px solid var(--accent-red); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+        .disclaimer-banner .text { font-size: 13px; line-height: 1.4; }
+        .disclaimer-banner strong { color: var(--accent-red); }
+        .demo-banner { display: none; background: linear-gradient(90deg, #ea580c, #c2410c); color: #ffffff; padding: 10px 16px; border-radius: 6px; font-weight: 800; text-align: center; letter-spacing: 1px; font-size: 14px; text-transform: uppercase; animation: pulseBanner 2s infinite ease-in-out; }
+        @keyframes pulseBanner { 0%, 100% { opacity: 0.95; } 50% { opacity: 0.8; } }
+        header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background-color: var(--bg-card); padding: 16px 20px; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
+        .brand h1 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .brand .badge { font-size: 11px; background-color: var(--accent-blue); color: #ffffff; padding: 2px 8px; border-radius: 12px; }
+        .brand p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        button { cursor: pointer; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; }
+        .btn-primary { background-color: var(--accent-blue); color: #ffffff; }
+        .btn-danger { background-color: var(--accent-red); color: #ffffff; }
+        .btn-secondary { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+        @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .metrics-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .metric-card { background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center; }
+        .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .metric-value { font-size: 26px; font-weight: 700; color: var(--text-primary); }
+        .metric-unit { font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-left: 2px; }
+        .status-pill { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .status-normal { background-color: rgba(52, 211, 153, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .status-low-flow { background-color: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .status-pause { background-color: rgba(248, 113, 113, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); animation: pulseAlert 1.5s infinite; }
+        .status-fault { background-color: rgba(239, 68, 68, 0.3); color: #ffffff; border: 1px solid #ef4444; }
+        @keyframes pulseAlert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        .canvas-wrapper { position: relative; width: 100%; height: 380px; background-color: var(--canvas-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; }
+        .canvas-overlay-legend { position: absolute; top: 10px; right: 12px; display: flex; gap: 12px; background-color: rgba(15, 23, 42, 0.7); padding: 4px 10px; border-radius: 6px; font-size: 11px; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-color { width: 10px; height: 10px; border-radius: 2px; }
+        .sidebar { display: flex; flex-direction: column; gap: 16px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table td { padding: 8px 4px; border-bottom: 1px solid var(--border-color); }
+        .data-table td:first-child { color: var(--text-secondary); }
+        .data-table td:last-child { text-align: right; font-weight: 600; }
+        .timeline { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .timeline-item { background-color: var(--bg-primary); border-left: 3px solid var(--accent-red); border-radius: 4px; padding: 6px 10px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
+        .modal { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; max-width: 500px; width: 100%; padding: 24px; box-shadow: var(--shadow); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="disclaimer-banner">
+            <div style="font-size: 24px;">??</div>
+            <div class="text">
+                <strong>STRICT SAFETY NOTICE: Learning Prototype — Not a Medical Device.</strong><br>
+                For educational low-pressure breathing airflow sensing only. Never connect to CPAP, ventilators, or pressurized sources. Never block the airway. Test only while awake and supervised.
+            </div>
+        </div>
+
+        <div id="demoBanner" class="demo-banner">
+            ?? SIMULATED DATA — DEMO MODE ACTIVE (Not Real Sensor Data)
+        </div>
+
+        <header>
+            <div class="brand">
+                <h1>Airflow & Mask-Pressure Logger <span class="badge">v1.0-proto</span></h1>
+                <p>ESP32 Bluetooth Low Energy Telemetry & Waveform Analyzer | Vigneshwar S (SRM IST)</p>
+            </div>
+            <div class="header-actions">
+                <button id="btnConnect" class="btn-primary" onclick="toggleBleConnection()">
+                    <span id="connIcon">??</span> <span id="connLabel">Connect Device</span>
+                </button>
+                <button id="btnDemo" class="btn-secondary" onclick="toggleDemoMode()">
+                    <span>??</span> <span id="demoLabel">Simulate Demo</span>
+                </button>
+                <button class="btn-secondary" onclick="openCalibrationModal()">
+                    <span>??</span> Zero Calibrate
+                </button>
+                <button class="btn-secondary" onclick="downloadCsvSession()">
+                    <span>??</span> Export CSV
+                </button>
+                <button class="btn-secondary" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+                    <span id="themeIcon">??</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="main-content">
+                <div class="metrics-summary-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Breathing Rate</div>
+                        <div class="metric-value" id="valBpm">--<span class="metric-unit">BPM</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">System Status</div>
+                        <div style="margin-top: 4px;">
+                            <span id="valStatusBadge" class="status-pill status-normal">STANDBY</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Relative Airflow</div>
+                        <div class="metric-value" id="valFlow">0.0<span class="metric-unit">rel. L/min</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Differential Pressure</div>
+                        <div class="metric-value" id="valPressure">0.0<span class="metric-unit">Pa</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Live Respiratory Waveform (50 Hz Acquisition)</span>
+                        <span style="font-size: 11px; color: var(--text-secondary);" id="waveformRateText">Stream: Idle</span>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <canvas id="waveformCanvas"></canvas>
+                        <div class="canvas-overlay-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--accent-blue);"></div>
+                                <span>Airflow (rel. L/min)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--accent-teal);"></div>
+                                <span>Pressure (Pa)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Tidal Dynamics</span></div>
+                    <table class="data-table">
+                        <tr><td>Peak Insp. Flow</td><td id="valPeakInsp">-- rel. L/min</td></tr>
+                        <tr><td>Peak Exp. Flow</td><td id="valPeakExp">-- rel. L/min</td></tr>
+                        <tr><td>Inhale:Exhale (I:E)</td><td id="valIeRatio">1 : --</td></tr>
+                        <tr><td>Active Pause Duration</td><td id="valPauseDuration" style="color: var(--accent-red);">0.0 s</td></tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Mask Ambient (BME280)</span></div>
+                    <table class="data-table">
+                        <tr><td>Temperature</td><td id="valTemp">--.- °C</td></tr>
+                        <tr><td>Relative Humidity</td><td id="valHumidity">--.- %</td></tr>
+                        <tr><td>Barometric Pressure</td><td id="valBaro">----.- hPa</td></tr>
+                        <tr><td>Thermal Stability</td><td id="valThermalDrift" style="color: var(--accent-green);">Stable</td></tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Battery Telemetry</span></div>
+                    <table class="data-table">
+                        <tr><td>Cell Voltage</td><td id="valBatVolts">--.- V</td></tr>
+                        <tr><td>Estimated Charge</td><td id="valBatPct">-- %</td></tr>
+                        <tr><td>Power Mode</td><td id="valBatStatus">Isolated LiPo</td></tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Breathing Pause Log (Prototype)</span>
+                        <span style="font-size: 11px; color: var(--accent-red);" id="pauseCountBadge">0 Events</span>
+                    </div>
+                    <div class="timeline" id="pauseTimeline">
+                        <div style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 12px;">
+                            No pause events recorded in this session.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="calibModal">
+        <div class="modal">
+            <h2 style="margin-bottom: 12px;">Zero-Offset Calibration</h2>
+            <ol style="padding-left: 20px; font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
+                <li>Ensure both ports are open to calm ambient air.</li>
+                <li>Keep assembly motionless for 3 seconds.</li>
+                <li>Click calibrate to average 150 readings and store offset.</li>
+            </ol>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn-secondary" onclick="closeCalibrationModal()">Cancel</button>
+                <button class="btn-primary" onclick="executeZeroCalibration()">Begin Calibration</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const BLE_SERVICE_UUID = '0000fff0-0000-1000-8000-00805f9b34fb';
+        const CHAR_WAVEFORM_UUID = '0000fff1-0000-1000-8000-00805f9b34fb';
+        const CHAR_METRICS_UUID = '0000fff2-0000-1000-8000-00805f9b34fb';
+        const CHAR_PAUSE_UUID = '0000fff3-0000-1000-8000-00805f9b34fb';
+        const CHAR_ENVIRONMENT_UUID = '0000fff4-0000-1000-8000-00805f9b34fb';
+        const CHAR_BATTERY_UUID = '0000fff5-0000-1000-8000-00805f9b34fb';
+
+        const STATUS_NORMAL = (1 << 0);
+        const STATUS_LOW_FLOW = (1 << 1);
+        const STATUS_PAUSE_ALERT = (1 << 2);
+        const STATUS_SENSOR_FAULT = (1 << 3);
+        const STATUS_DEMO_MODE = (1 << 4);
+
+        let bleDevice = null, bleServer = null, isConnected = false, isDemoMode = false, demoInterval = null, pauseCount = 0;
+        const BUFFER_CAP = 300;
+        const flowHistory = new Array(BUFFER_CAP).fill(0);
+        const pressureHistory = new Array(BUFFER_CAP).fill(0);
+        const sessionCsv = [['timestamp_ms', 'flow_rel_lmin', 'pressure_pa', 'bpm', 'status', 'temp_c', 'humidity_pct', 'bat_pct']];
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            document.getElementById('themeIcon').textContent = next === 'dark' ? '??' : '??';
+            localStorage.setItem('theme', next);
+        }
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+
+        const canvas = document.getElementById('waveformCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * (window.devicePixelRatio || 1);
+            canvas.height = rect.height * (window.devicePixelRatio || 1);
+            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawWaveform() {
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
+            const cy = h / 2;
+            const style = getComputedStyle(document.documentElement);
+            ctx.fillStyle = style.getPropertyValue('--canvas-bg').trim();
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.strokeStyle = style.getPropertyValue('--grid-line').trim();
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(0, cy); ctx.lineTo(w, cy);
+            ctx.moveTo(0, cy - h * 0.35); ctx.lineTo(w, cy - h * 0.35);
+            ctx.moveTo(0, cy + h * 0.35); ctx.lineTo(w, cy + h * 0.35);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.strokeStyle = style.getPropertyValue('--accent-blue').trim();
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            const step = w / (BUFFER_CAP - 1);
+            for (let i = 0; i < BUFFER_CAP; i++) {
+                const x = i * step;
+                const y = cy - (flowHistory[i] / 35.0) * (h * 0.42);
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            ctx.lineTo(w, cy); ctx.lineTo(0, cy); ctx.closePath();
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+            ctx.fill();
+            requestAnimationFrame(drawWaveform);
+        }
+        requestAnimationFrame(drawWaveform);
+
+        function handleWaveform(e) {
+            const v = e.target.value;
+            if (v.byteLength < 8) return;
+            const ts = v.getUint32(0, true);
+            const p = v.getInt16(4, true) / 10.0;
+            const f = v.getInt16(6, true) / 10.0;
+            document.getElementById('valFlow').innerHTML = `${f.toFixed(1)}<span class="metric-unit">rel. L/min</span>`;
+            document.getElementById('valPressure').innerHTML = `${p.toFixed(1)}<span class="metric-unit">Pa</span>`;
+            flowHistory.shift(); flowHistory.push(f);
+            pressureHistory.shift(); pressureHistory.push(p);
+            if (sessionCsv.length < 10000) sessionCsv.push([ts, f, p, '', '', '', '', '']);
+        }
+
+        function handleMetrics(e) {
+            const v = e.target.value;
+            if (v.byteLength < 9) return;
+            const bpm = v.getUint16(0, true) / 10.0;
+            const pi = v.getUint16(2, true) / 10.0;
+            const pe = v.getUint16(4, true) / 10.0;
+            const ie = v.getUint16(6, true) / 10.0;
+            const st = v.getUint8(8);
+            document.getElementById('valBpm').innerHTML = `${bpm > 0 ? bpm.toFixed(1) : '--'}<span class="metric-unit">BPM</span>`;
+            document.getElementById('valPeakInsp').textContent = `${pi.toFixed(1)} rel. L/min`;
+            document.getElementById('valPeakExp').textContent = `${pe.toFixed(1)} rel. L/min`;
+            document.getElementById('valIeRatio').textContent = `1 : ${ie.toFixed(1)}`;
+            updateStatus(st);
+        }
+
+        function handlePause(e) {
+            const v = e.target.value;
+            if (v.byteLength < 8) return;
+            const start = v.getUint32(0, true);
+            const dur = (v.getUint32(4, true) / 1000.0).toFixed(1);
+            document.getElementById('valPauseDuration').textContent = `${dur} s`;
+            addPauseTimeline(start, dur);
+        }
+
+        function handleEnv(e) {
+            const v = e.target.value;
+            if (v.byteLength < 8) return;
+            const t = v.getInt16(0, true) / 100.0;
+            const h = v.getUint16(2, true) / 100.0;
+            const p = v.getUint32(4, true) / 100.0;
+            document.getElementById('valTemp').textContent = `${t.toFixed(1)} °C`;
+            document.getElementById('valHumidity').textContent = `${h.toFixed(1)} %`;
+            document.getElementById('valBaro').textContent = `${p.toFixed(1)} hPa`;
+        }
+
+        function handleBat(e) {
+            const v = e.target.value;
+            if (v.byteLength < 4) return;
+            const mv = v.getUint16(0, true);
+            const pct = v.getUint8(2);
+            document.getElementById('valBatVolts').textContent = `${(mv / 1000.0).toFixed(2)} V`;
+            document.getElementById('valBatPct').textContent = `${pct} %`;
+        }
+
+        function updateStatus(flags) {
+            const badge = document.getElementById('valStatusBadge');
+            const demoBanner = document.getElementById('demoBanner');
+            if (flags & STATUS_DEMO_MODE || isDemoMode) demoBanner.style.display = 'block';
+            else demoBanner.style.display = 'none';
+
+            if (flags & STATUS_BIT_SENSOR_FAULT) {
+                badge.className = 'status-pill status-fault';
+                badge.textContent = 'SENSOR FAULT / FLATLINE';
+            } else if (flags & STATUS_BIT_PAUSE_ALERT) {
+                badge.className = 'status-pill status-pause';
+                badge.textContent = 'PAUSE ALERT (PROTOTYPE)';
+            } else if (flags & STATUS_BIT_LOW_FLOW) {
+                badge.className = 'status-pill status-low-flow';
+                badge.textContent = 'LOW FLOW';
+            } else {
+                badge.className = 'status-pill status-normal';
+                badge.textContent = 'NORMAL BREATHING';
+            }
+        }
+
+        function addPauseTimeline(start_ms, duration_sec) {
+            const tl = document.getElementById('pauseTimeline');
+            if (pauseCount === 0) tl.innerHTML = '';
+            pauseCount++;
+            document.getElementById('pauseCountBadge').textContent = `${pauseCount} Events`;
+            const div = document.createElement('div');
+            div.className = 'timeline-item';
+            div.innerHTML = `<div><strong>Breathing Pause Alert (prototype)</strong><div style="color: var(--text-secondary); font-size: 11px;">${new Date().toLocaleTimeString()}</div></div><div style="font-weight: 700; color: var(--accent-red);">${duration_sec}s</div>`;
+            tl.prepend(div);
+        }
+
+        async function toggleBleConnection() {
+            if (isConnected) {
+                if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
+                onDisconnect();
+                return;
+            }
+            if (!navigator.bluetooth) {
+                alert('Web Bluetooth requires Google Chrome on Desktop or Android.');
+                return;
+            }
+            try {
+                document.getElementById('connLabel').textContent = 'Pairing...';
+                bleDevice = await navigator.bluetooth.requestDevice({
+                    filters: [{ name: 'Airflow-Logger-ESP32' }],
+                    optionalServices: [BLE_SERVICE_UUID]
+                });
+                bleDevice.addEventListener('gattserverdisconnected', onDisconnect);
+                bleServer = await bleDevice.gatt.connect();
+                const s = await bleServer.getPrimaryService(BLE_SERVICE_UUID);
+                (await s.getCharacteristic(CHAR_WAVEFORM_UUID)).addEventListener('characteristicvaluechanged', handleWaveform);
+                await (await s.getCharacteristic(CHAR_WAVEFORM_UUID)).startNotifications();
+                (await s.getCharacteristic(CHAR_METRICS_UUID)).addEventListener('characteristicvaluechanged', handleMetrics);
+                await (await s.getCharacteristic(CHAR_METRICS_UUID)).startNotifications();
+                (await s.getCharacteristic(CHAR_PAUSE_UUID)).addEventListener('characteristicvaluechanged', handlePause);
+                await (await s.getCharacteristic(CHAR_PAUSE_UUID)).startNotifications();
+                (await s.getCharacteristic(CHAR_ENVIRONMENT_UUID)).addEventListener('characteristicvaluechanged', handleEnv);
+                await (await s.getCharacteristic(CHAR_ENVIRONMENT_UUID)).startNotifications();
+                (await s.getCharacteristic(CHAR_BATTERY_UUID)).addEventListener('characteristicvaluechanged', handleBat);
+                await (await s.getCharacteristic(CHAR_BATTERY_UUID)).startNotifications();
+                isConnected = true;
+                document.getElementById('connLabel').textContent = 'Disconnect';
+                document.getElementById('btnConnect').className = 'btn-danger';
+                document.getElementById('waveformRateText').textContent = 'Stream: 50 Hz Live BLE';
+            } catch (err) {
+                console.error(err);
+                onDisconnect();
+            }
+        }
+
+        function onDisconnect() {
+            isConnected = false;
+            document.getElementById('connLabel').textContent = 'Connect Device';
+            document.getElementById('btnConnect').className = 'btn-primary';
+            document.getElementById('waveformRateText').textContent = 'Stream: Idle';
+        }
+
+        function toggleDemoMode() {
+            isDemoMode = !isDemoMode;
+            const b = document.getElementById('demoBanner');
+            const btn = document.getElementById('btnDemo');
+            if (isDemoMode) {
+                b.style.display = 'block';
+                btn.className = 'btn-primary';
+                document.getElementById('demoLabel').textContent = 'Stop Demo';
+                document.getElementById('waveformRateText').textContent = 'Stream: Simulated 50 Hz';
+                startDemo();
+            } else {
+                b.style.display = 'none';
+                btn.className = 'btn-secondary';
+                document.getElementById('demoLabel').textContent = 'Simulate Demo';
+                document.getElementById('waveformRateText').textContent = 'Stream: Idle';
+                if (demoInterval) clearInterval(demoInterval);
+                updateStatus(STATUS_NORMAL);
+            }
+        }
+
+        function startDemo() {
+            let t = 0;
+            demoInterval = setInterval(() => {
+                t += 20;
+                const c = t % 40000;
+                let flow = 0, dp = 0, st = STATUS_NORMAL | STATUS_DEMO_MODE;
+                if (c > 22000 && c < 34000) {
+                    flow = (Math.random() - 0.5) * 0.2;
+                    dp = (Math.random() - 0.5) * 0.4;
+                    const elapsed = (c - 22000) / 1000.0;
+                    document.getElementById('valPauseDuration').textContent = `${elapsed.toFixed(1)} s`;
+                    if (elapsed >= 10.0) st = STATUS_PAUSE_ALERT | STATUS_DEMO_MODE;
+                    if (Math.abs(elapsed - 10.0) < 0.05) addPauseTimeline(t, '12.0');
+                } else {
+                    const ph = (t % 4000) / 4000.0;
+                    if (ph < 0.4) flow = -22.0 * Math.sin(ph / 0.4 * Math.PI);
+                    else flow = 18.0 * Math.sin((ph - 0.4) / 0.6 * Math.PI);
+                    flow += (Math.random() - 0.5) * 0.8;
+                    dp = (flow >= 0 ? 1 : -1) * Math.pow(flow / 14.2, 2.0);
+                    document.getElementById('valPauseDuration').textContent = '0.0 s';
+                }
+                flowHistory.shift(); flowHistory.push(flow);
+                pressureHistory.shift(); pressureHistory.push(dp);
+                document.getElementById('valFlow').innerHTML = `${flow.toFixed(1)}<span class="metric-unit">rel. L/min</span>`;
+                document.getElementById('valPressure').innerHTML = `${dp.toFixed(1)}<span class="metric-unit">Pa</span>`;
+                if (t % 1000 === 0) {
+                    document.getElementById('valBpm').innerHTML = `15.0<span class="metric-unit">BPM</span>`;
+                    document.getElementById('valPeakInsp').textContent = '22.4 rel. L/min';
+                    document.getElementById('valPeakExp').textContent = '18.2 rel. L/min';
+                    document.getElementById('valIeRatio').textContent = '1 : 1.5';
+                    document.getElementById('valTemp').textContent = '26.2 °C';
+                    document.getElementById('valHumidity').textContent = '58.4 %';
+                    document.getElementById('valBaro').textContent = '1012.8 hPa';
+                    document.getElementById('valBatVolts').textContent = '3.92 V';
+                    document.getElementById('valBatPct').textContent = '82 %';
+                    updateStatus(st);
+                }
+            }, 20);
+        }
+
+        function openCalibrationModal() { document.getElementById('calibModal').style.display = 'flex'; }
+        function closeCalibrationModal() { document.getElementById('calibModal').style.display = 'none'; }
+        function executeZeroCalibration() { closeCalibrationModal(); alert('Zero calibration running (3s motionless air)...'); }
+        function downloadCsvSession() {
+            const blob = new Blob([sessionCsv.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `airflow_log_${Date.now()}.csv`;
+            a.click();
+        }
+
+        if (window.location.search.includes('theme=light')) { document.documentElement.setAttribute('data-theme', 'light'); }
+        if (window.location.search.includes('demo=1')) {
+            window.addEventListener('DOMContentLoaded', toggleDemoMode);
+        }
+    </script>
+</body>
+</html>

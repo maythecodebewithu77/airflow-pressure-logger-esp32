@@ -29,8 +29,14 @@ Developed as a student learning prototype by **Vigneshwar S**, 2nd-year Electron
 The web dashboard is a single self-contained HTML/JS application utilizing the modern Web Bluetooth API. It provides real-time canvas waveform graphing, live physiological metrics, pause event logging, and CSV data export without requiring external libraries or build tools.
 
 <!-- Dashboard Screenshot Embed -->
-![Dashboard running in demo mode with simulated data](docs/images/dashboard-demo.png)
-*Figure 1: Dashboard running in demo mode with simulated data (SIMULATED DATA banner active).*
+<div align="center">
+
+| Light Mode (Simulated Data) | Dark Mode (Simulated Data) |
+| :---: | :---: |
+| ![Dashboard Light Mode](docs/images/dashboard-demo.png) | ![Dashboard Dark Mode](docs/images/dashboard-demo-dark.png) |
+
+*Figure 1: Self-contained Web Bluetooth dashboard running in demo mode with simulated data.*
+</div>
 
 <!-- Real Hardware Screenshot Placeholder: 
 Once physical hardware bench testing is completed, replace or supplement with:
@@ -205,3 +211,4 @@ airflow-pressure-logger-esp32/
 ## License
 - **Firmware, Software & Web Dashboard**: Licensed under the [MIT License](LICENSE).
 - **Hardware Documentation, Schematics & Guides**: Licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
