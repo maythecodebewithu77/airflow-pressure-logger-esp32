@@ -7,11 +7,11 @@
 
 struct Bme280Data {
     uint32_t timestamp_ms;
-    float temperature_c;       // Ambient/mask temperature in °C
+    float temperature_c;       // Ambient/mask temperature in Â°C
     float humidity_percent;    // Relative humidity in %
     float pressure_pa;         // Absolute barometric pressure in Pa
     bool is_valid;             // True if sensor is communicating
-    bool thermal_drift_warning;// True if temperature has shifted > 2.0°C from zeroing baseline
+    bool thermal_drift_warning;// True if temperature has shifted > 2.0Â°C from zeroing baseline
 };
 
 class Bme280Reader {

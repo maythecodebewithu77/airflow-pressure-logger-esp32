@@ -11,7 +11,7 @@ Developed as a student learning prototype by **Vigneshwar S**, 2nd-year Electron
 
 ---
 
-## ?? Important Safety Rules & Non-Medical Disclaimer
+## ⚠️ Important Safety Rules & Non-Medical Disclaimer
 
 > [!CAUTION]
 > ### STRICT SAFETY WARNING & DISCLAIMER
@@ -71,27 +71,27 @@ Once physical hardware bench testing is completed, replace or supplement with:
 - [x] **Phase 4: Automated Testing & Validation**
   - [x] Unit tests for breathing analysis algorithm on synthetic waveforms (4/4 passed).
   - [x] Browser screenshot capture in light and dark mode (`dashboard-demo.png`, `dashboard-demo-dark.png`).
-- [ ] **Phase 5: GitHub Publication**
-  - [ ] Clean Git commit history, remote repository push, and community documentation.
+- [x] **Phase 5: GitHub Publication**
+  - [x] Clean Git commit history, remote repository pushed to [GitHub](https://github.com/maythecodebewithu77/airflow-pressure-logger-esp32).
 
 ---
 
 ## Key Features
 
 1. **Precision Differential Airflow Measurement**:
-   - Measures bidirectional pressure drop ($\pm 2.0\text{ kPa}$) across a low-resistance restrictor using an NXP MPXV7002DP piezoresistive sensor.
+   - Measures bidirectional pressure drop (±2.0 kPa) across a low-resistance restrictor using an NXP MPXV7002DP piezoresistive sensor.
    - Sampled with 16-bit resolution via an ADS1115 precision ADC over I2C.
 2. **Digital Signal Processing Pipeline**:
-   - Single-pole IIR low-pass filtering ($f_c = 4.0\text{ Hz}$) to eliminate high-frequency turbulence and motor noise.
+   - Single-pole IIR low-pass filtering ($f_c = 4.0	ext{ Hz}$) to eliminate high-frequency turbulence and motor noise.
    - Dynamic baseline drift tracking to compensate for slow thermal shifts.
-   - Non-linear flow conversion: $Q(t) = k \cdot \text{sgn}(\Delta P) \cdot \sqrt{|\Delta P|}$.
+   - Non-linear flow conversion: $Q(t) = k \cdot 	ext{sgn}(\Delta P) \cdot \sqrt{|\Delta P|}$.
 3. **Breathing Pattern Analysis**:
    - Hysteresis-based zero-crossing detection for inspiratory/expiratory phase identification.
    - Rolling 60-second window for breaths-per-minute (BPM) calculation.
    - Calculation of relative peak flow and inspiratory-to-expiratory (I:E) time ratio.
 4. **Breathing Pause Alert (Prototype)**:
    - Identifies prolonged flow cessation exceeding configurable threshold (default: 10 s).
-   - Discriminate between biological pauses and hardware faults (disconnected sensor or open ADC line).
+   - Discriminates between biological pauses and hardware faults (disconnected sensor or open ADC line).
 5. **Secondary Environmental & Battery Telemetry**:
    - Bosch BME280 sensor reads ambient enclosure barometric pressure, temperature, and relative humidity at 1 Hz.
    - Integrated battery voltage divider with low-battery warning flag.
@@ -105,17 +105,17 @@ Once physical hardware bench testing is completed, replace or supplement with:
 ### Bill of Materials Summary
 | Part | Specification | Est. Price (INR) | Role |
 | :--- | :--- | :---: | :--- |
-| **ESP32-WROOM-32** | 240MHz Xtensa, BLE 4.2 | ?380 - ?450 | Primary processing & BLE server |
-| **MPXV7002DP** | Analog $\pm 2\text{ kPa}$ differential sensor | ?1,250 - ?1,650 | Measures pressure drop across restrictor |
-| **ADS1115** | 16-bit precision ADC (I2C: 0x48) | ?180 - ?240 | High-resolution analog acquisition |
-| **BME280** | I2C (0x76): Temp, Humid, Baro | ?280 - ?350 | Secondary environmental cross-check |
-| **TP4056 + 1S LiPo** | 3.7V 800-1200mAh pouch cell | ?320 - ?440 | Portable, isolated power |
-| **Passives & Tubing** | Dividers, decoupling, silicone tube | ?150 - ?250 | Interconnects and pneumatics |
+| **ESP32-WROOM-32** | 240MHz Xtensa, BLE 4.2 | ₹380 - ₹450 | Primary processing & BLE server |
+| **MPXV7002DP** | Analog ±2 kPa differential sensor | ₹1,250 - ₹1,650 | Measures pressure drop across restrictor |
+| **ADS1115** | 16-bit precision ADC (I2C: 0x48) | ₹180 - ₹240 | High-resolution analog acquisition |
+| **BME280** | I2C (0x76): Temp, Humid, Baro | ₹280 - ₹350 | Secondary environmental cross-check |
+| **TP4056 + 1S LiPo** | 3.7V 800-1200mAh pouch cell | ₹320 - ₹440 | Portable, isolated power |
+| **Passives & Tubing** | Dividers, decoupling, silicone tube | ₹150 - ₹250 | Interconnects and pneumatics |
 
 For full sourcing details (including Ritchie Street Chennai and Robu.in notes), refer to [hardware/bom.md](hardware/bom.md).
 
 ### Wiring Map
-- **I2C Bus**: ESP32 GPIO 21 (SDA) & GPIO 22 (SCL) $\rightarrow$ ADS1115 & BME280 (with 4.7k pull-ups to 3.3V).
+- **I2C Bus**: ESP32 GPIO 21 (SDA) & GPIO 22 (SCL) → ADS1115 & BME280 (with 4.7k pull-ups to 3.3V).
 - **MPXV7002DP**: Powered from 5V rail; Vout connected to ADS1115 A0 via a 10k/15k passive divider (0.6x attenuation to protect 3.3V ADC).
 - **Battery Sense**: LiPo (+) connected to ESP32 GPIO 34 via 100k/100k divider with 100nF filtering cap.
 - **Status LED**: ESP32 GPIO 2 (active high).
@@ -133,7 +133,7 @@ Detailed schematic diagram and pin tables are available in [hardware/wiring.md](
 ### Compiling and Flashing Firmware
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/airflow-pressure-logger-esp32.git
+git clone https://github.com/maythecodebewithu77/airflow-pressure-logger-esp32.git
 cd airflow-pressure-logger-esp32
 
 # Build the firmware
@@ -167,34 +167,34 @@ python firmware/test/test_breathing_algorithm.py
 ## Repository Structure
 ```
 airflow-pressure-logger-esp32/
-+-- README.md               # Main project documentation and overview
-+-- LICENSE                 # Dual license: MIT (code) & CC BY 4.0 (docs)
-+-- .gitignore              # PlatformIO, KiCad, and OS ignore patterns
-+-- platformio.ini          # PlatformIO build configuration
-+-- firmware/
-¦   +-- src/                # Modular C++ firmware source
-¦   ¦   +-- main.cpp        # Setup, main loop, and task dispatching
-¦   ¦   +-- config.h        # Central configuration, pins, and algorithm thresholds
-¦   ¦   +-- airflow.h/.cpp  # MPXV7002DP + ADS1115 sampling and IIR filtering
-¦   ¦   +-- breathing.h/.cpp# Phase detection, BPM, pause alert state machine
-¦   ¦   +-- bme280_reader.h/.cpp # Environmental secondary data reader
-¦   ¦   +-- ble_service.h/.cpp   # BLE GATT server and notification characteristics
-¦   ¦   +-- battery.h/.cpp  # Battery divider voltage reader & state of charge
-¦   ¦   +-- logger.h/.cpp   # Serial CSV telemetry and plotter output
-¦   +-- test/               # Unit test suites on synthetic and recorded waveforms
-+-- dashboard/
-¦   +-- index.html          # Self-contained Web Bluetooth dashboard (HTML/CSS/JS)
-+-- hardware/
-¦   +-- wiring.md           # Pin tables and Mermaid circuit diagram
-¦   +-- bom.md              # Bill of Materials, Indian sourcing, and sensor physics
-¦   +-- flow-restrictor.md  # 3D printable mechanical tube design & calibration
-¦   +-- pcb-notes.md        # Layout rules for custom 2-layer KiCad PCB
-+-- docs/
-    +-- design-notes.md     # Fluid mechanics, algorithms, BLE packets, and power
-    +-- calibration.md      # Zero-point and volume calibration procedures
-    +-- test-plan.md        # Awake supervised test protocols
-    +-- results.md          # Blank verification templates (Honesty Rules)
-    +-- images/             # Diagrams, demo captures, and photos
+├── README.md               # Main project documentation and overview
+├── LICENSE                 # Dual license: MIT (code) & CC BY 4.0 (docs)
+├── .gitignore              # PlatformIO, KiCad, and OS ignore patterns
+├── platformio.ini          # PlatformIO build configuration
+├── firmware/
+│   ├── src/                # Modular C++ firmware source
+│   │   ├── main.cpp        # Setup, main loop, and task dispatching
+│   │   ├── config.h        # Central configuration, pins, and algorithm thresholds
+│   │   ├── airflow.h/.cpp  # MPXV7002DP + ADS1115 sampling and IIR filtering
+│   │   ├── breathing.h/.cpp# Phase detection, BPM, pause alert state machine
+│   │   ├── bme280_reader.h/.cpp # Environmental secondary data reader
+│   │   ├── ble_service.h/.cpp   # BLE GATT server and notification characteristics
+│   │   ├── battery.h/.cpp  # Battery divider voltage reader & state of charge
+│   │   └── logger.h/.cpp   # Serial CSV telemetry and plotter output
+│   └── test/               # Unit test suites on synthetic and recorded waveforms
+├── dashboard/
+│   └── index.html          # Self-contained Web Bluetooth dashboard (HTML/CSS/JS)
+├── hardware/
+│   ├── wiring.md           # Pin tables and Mermaid circuit diagram
+│   ├── bom.md              # Bill of Materials, Indian sourcing, and sensor physics
+│   ├── flow-restrictor.md  # 3D printable mechanical tube design & calibration
+│   └── pcb-notes.md        # Layout rules for custom 2-layer KiCad PCB
+└── docs/
+    ├── design-notes.md     # Fluid mechanics, algorithms, BLE packets, and power
+    ├── calibration.md      # Zero-point and volume calibration procedures
+    ├── test-plan.md        # Awake supervised test protocols
+    ├── results.md          # Blank verification templates (Honesty Rules)
+    └── images/             # Diagrams, demo captures, and photos
 ```
 
 ---
@@ -203,12 +203,11 @@ airflow-pressure-logger-esp32/
 
 - **Author**: Vigneshwar S
 - **Academic Standing**: 2nd-year B.Tech in Electronics and Communication Engineering (ECE)
-
+- **Institution**: SRM Institute of Science and Technology, Kattankulathur, Chennai, India
+- **Areas of Interest**: Embedded Systems, PCB Design (KiCad), Biomedical Instrumentation, Low-Power IoT
 
 ---
 
 ## License
 - **Firmware, Software & Web Dashboard**: Licensed under the [MIT License](LICENSE).
 - **Hardware Documentation, Schematics & Guides**: Licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
-
-

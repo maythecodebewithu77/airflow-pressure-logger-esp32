@@ -91,13 +91,13 @@
         <div class="disclaimer-banner">
             <div style="font-size: 24px;">??</div>
             <div class="text">
-                <strong>STRICT SAFETY NOTICE: Learning Prototype — Not a Medical Device.</strong><br>
+                <strong>STRICT SAFETY NOTICE: Learning Prototype â€” Not a Medical Device.</strong><br>
                 For educational low-pressure breathing airflow sensing only. Never connect to CPAP, ventilators, or pressurized sources. Never block the airway. Test only while awake and supervised.
             </div>
         </div>
 
         <div id="demoBanner" class="demo-banner">
-            ?? SIMULATED DATA — DEMO MODE ACTIVE (Not Real Sensor Data)
+            ?? SIMULATED DATA â€” DEMO MODE ACTIVE (Not Real Sensor Data)
         </div>
 
         <header>
@@ -182,7 +182,7 @@
                 <div class="card">
                     <div class="card-header"><span class="card-title">Mask Ambient (BME280)</span></div>
                     <table class="data-table">
-                        <tr><td>Temperature</td><td id="valTemp">--.- °C</td></tr>
+                        <tr><td>Temperature</td><td id="valTemp">--.- Â°C</td></tr>
                         <tr><td>Relative Humidity</td><td id="valHumidity">--.- %</td></tr>
                         <tr><td>Barometric Pressure</td><td id="valBaro">----.- hPa</td></tr>
                         <tr><td>Thermal Stability</td><td id="valThermalDrift" style="color: var(--accent-green);">Stable</td></tr>
@@ -346,7 +346,7 @@
             const t = v.getInt16(0, true) / 100.0;
             const h = v.getUint16(2, true) / 100.0;
             const p = v.getUint32(4, true) / 100.0;
-            document.getElementById('valTemp').textContent = `${t.toFixed(1)} °C`;
+            document.getElementById('valTemp').textContent = `${t.toFixed(1)} Â°C`;
             document.getElementById('valHumidity').textContent = `${h.toFixed(1)} %`;
             document.getElementById('valBaro').textContent = `${p.toFixed(1)} hPa`;
         }
@@ -488,7 +488,7 @@
                     document.getElementById('valPeakInsp').textContent = '22.4 rel. L/min';
                     document.getElementById('valPeakExp').textContent = '18.2 rel. L/min';
                     document.getElementById('valIeRatio').textContent = '1 : 1.5';
-                    document.getElementById('valTemp').textContent = '26.2 °C';
+                    document.getElementById('valTemp').textContent = '26.2 Â°C';
                     document.getElementById('valHumidity').textContent = '58.4 %';
                     document.getElementById('valBaro').textContent = '1012.8 hPa';
                     document.getElementById('valBatVolts').textContent = '3.92 V';

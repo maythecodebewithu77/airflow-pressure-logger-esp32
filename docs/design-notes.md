@@ -132,7 +132,7 @@ A critical requirement is that a disconnected sensor MUST NEVER be reported as a
 - **UUID**: `0000FFF4-0000-1000-8000-00805F9B34FB`
 - **Payload Size**: 8 bytes (Binary, Little-Endian)
 - **Byte Layout**:
-  - `[0-1]` `int16_t temperature_c_x100`: Temperature in °C * 100 (e.g. `2745` = 27.45 °C).
+  - `[0-1]` `int16_t temperature_c_x100`: Temperature in Â°C * 100 (e.g. `2745` = 27.45 Â°C).
   - `[2-3]` `uint16_t humidity_rh_x100`: Relative humidity in % * 100 (e.g. `5820` = 58.20%).
   - `[4-7]` `uint32_t pressure_pa`: Absolute barometric pressure in Pa (e.g. `101325` Pa).
 

@@ -9,17 +9,17 @@ This document specifies the electronic and mechanical components required to ass
 
 | Item # | Description / Part Number | Function | Key Specifications | Approx Price (INR) | Recommended Source | Alternatives |
 | :---: | :--- | :--- | :--- | :---: | :--- | :--- |
-| 1 | **ESP32-WROOM-32 DevKit V1** | Main Microcontroller | Dual-core Xtensa 240MHz, BLE 4.2 / 5.0, 520KB SRAM | ?380 - ?450 | Robu.in / Ritchie Street (Supreme / Vega) | NodeMCU ESP32, ESP32-S3 DevKit |
-| 2 | **MPXV7002DP** (or breakout) | Primary Differential Pressure Sensor | Dual port, piezoresistive, bidirectional $\pm 2\text{ kPa}$ ($\pm 0.3\text{ psi}$), 0.5V - 4.5V output | ?1,250 - ?1,650 | Robu.in / Mouser India / Evelta | Sensirion SDP810 (Digital I2C), MP3V5004DP ($\pm 3.92\text{ kPa}$) |
-| 3 | **ADS1115 Breakout Module** | 16-Bit Precision ADC | 4-channel differential/single-ended, programmable gain amp, I2C interface | ?180 - ?240 | Robu.in / Amazon.in / Ritchie Street | ADS1015 (12-bit, faster but lower resolution), MCP3424 |
-| 4 | **BME280 Module** (I2C/SPI) | Secondary Environmental Sensor | Absolute barometric pressure (300-1100 hPa), Temperature (-40 to 85�C), Relative Humidity (0-100%) | ?280 - ?350 | Robu.in / Amazon.in / Ritchie Street | BMP280 (Pressure + Temp only, lacks Humidity; ?120) |
-| 5 | **TP4056 Li-Ion Charger Board** | Battery Management | Micro-USB or USB-C input, CC/CV 1A charging, DW01A overcharge/discharge protection | ?35 - ?50 | Ritchie Street / Robu.in | IP5306 module, MCP73831 standalone IC on custom PCB |
-| 6 | **1S LiPo Battery (3.7V)** | Portable Power Source | 800 mAh to 1200 mAh, 1S pouch cell with JST-PH 2.0 connector | ?280 - ?380 | Robu.in / Evelta / Fab.to.lab | 18650 cylindrical cell with holder |
-| 7 | **Medical Grade Silicone Tubing** | Pneumatic Routing | 2.5 mm ID / 4.0 mm OD, highly flexible, kink-resistant | ?100 - ?150 (per meter) | Amazon.in / Local surgical supply store | Aquarium soft PVC tubing (stiffer, less ideal) |
-| 8 | **Passive Components** | Signal conditioning & divider | Resistors: 10k, 15k, 4.7k (x2), 100k (x2); Capacitors: 100nF (x3), 10uF (x2) | ?40 - ?60 | Ritchie Street / Local lab stock | 0805 SMD passives for custom PCB |
-| 9 | **Mechanical Flow Restrictor** | Differential Pressure Generation | 3D printed PETG/PLA or acrylic tube with 6mm orifice plate and dual barbed taps | ?120 - ?200 (printing) | Campus 3D lab / Print3D / DIY pipe | Fleisch pneumotachograph, mesh laminar flow element |
-| 10 | **Prototyping Hardware** | Interconnects | Breadboard / Perma-proto board, silicone jumper wires, SPDT slide switch | ?80 - ?120 | Local electronics shop | Direct wire soldering |
-| **Total** | | | **Estimated Total Cost:** | **?2,665 - ?3,600** | | |
+| 1 | **ESP32-WROOM-32 DevKit V1** | Main Microcontroller | Dual-core Xtensa 240MHz, BLE 4.2 / 5.0, 520KB SRAM | ₹380 - ₹450 | Robu.in / Ritchie Street (Supreme / Vega) | NodeMCU ESP32, ESP32-S3 DevKit |
+| 2 | **MPXV7002DP** (or breakout) | Primary Differential Pressure Sensor | Dual port, piezoresistive, bidirectional $\pm 2\text{ kPa}$ ($\pm 0.3\text{ psi}$), 0.5V - 4.5V output | ₹1,250 - ₹1,650 | Robu.in / Mouser India / Evelta | Sensirion SDP810 (Digital I2C), MP3V5004DP ($\pm 3.92\text{ kPa}$) |
+| 3 | **ADS1115 Breakout Module** | 16-Bit Precision ADC | 4-channel differential/single-ended, programmable gain amp, I2C interface | ₹180 - ₹240 | Robu.in / Amazon.in / Ritchie Street | ADS1015 (12-bit, faster but lower resolution), MCP3424 |
+| 4 | **BME280 Module** (I2C/SPI) | Secondary Environmental Sensor | Absolute barometric pressure (300-1100 hPa), Temperature (-40 to 85°C), Relative Humidity (0-100%) | ₹280 - ₹350 | Robu.in / Amazon.in / Ritchie Street | BMP280 (Pressure + Temp only, lacks Humidity; ?120) |
+| 5 | **TP4056 Li-Ion Charger Board** | Battery Management | Micro-USB or USB-C input, CC/CV 1A charging, DW01A overcharge/discharge protection | ₹35 - ₹50 | Ritchie Street / Robu.in | IP5306 module, MCP73831 standalone IC on custom PCB |
+| 6 | **1S LiPo Battery (3.7V)** | Portable Power Source | 800 mAh to 1200 mAh, 1S pouch cell with JST-PH 2.0 connector | ₹280 - ₹380 | Robu.in / Evelta / Fab.to.lab | 18650 cylindrical cell with holder |
+| 7 | **Medical Grade Silicone Tubing** | Pneumatic Routing | 2.5 mm ID / 4.0 mm OD, highly flexible, kink-resistant | ₹100 - ₹150 (per meter) | Amazon.in / Local surgical supply store | Aquarium soft PVC tubing (stiffer, less ideal) |
+| 8 | **Passive Components** | Signal conditioning & divider | Resistors: 10k, 15k, 4.7k (x2), 100k (x2); Capacitors: 100nF (x3), 10uF (x2) | ₹40 - ₹60 | Ritchie Street / Local lab stock | 0805 SMD passives for custom PCB |
+| 9 | **Mechanical Flow Restrictor** | Differential Pressure Generation | 3D printed PETG/PLA or acrylic tube with 6mm orifice plate and dual barbed taps | ₹120 - ₹200 (printing) | Campus 3D lab / Print3D / DIY pipe | Fleisch pneumotachograph, mesh laminar flow element |
+| 10 | **Prototyping Hardware** | Interconnects | Breadboard / Perma-proto board, silicone jumper wires, SPDT slide switch | ₹80 - ₹120 | Local electronics shop | Direct wire soldering |
+| **Total** | | | **Estimated Total Cost:** | **₹2,665 - ₹3,600** | | |
 
 ---
 
@@ -60,6 +60,6 @@ A common student mistake is attempting to estimate breathing airflow using an ab
 | **Zero-Point Accuracy** | Factory offset drift $\pm 100\text{ mV}$ (requires software zero calibration) | Thermal-mass flow micro-sensor, exceptional zero-point stability ($< 0.1\text{ Pa}$ offset) |
 | **Circuit Complexity** | Requires ADS1115 ADC + voltage divider resistors | Direct connection to I2C bus (3.3V native) |
 | **Availability in India** | Readily available as standalone IC or APM airspeed breakout | Available on Mouser / DigiKey; occasionally on Robu.in |
-| **Cost** | ~?1,400 total (sensor + ADC) | ~?2,500 |
+| **Cost** | ~₹1,400 total (sensor + ADC) | ~₹2,500 |
 
 *Conclusion*: For this prototype, the **MPXV7002DP + ADS1115** is the recommended baseline due to widespread availability in India, robust analog signal conditioning learning value, and simple interfacing. Firmware design will maintain an abstraction layer so that digital I2C sensors like the Sensirion SDP810 can be substituted seamlessly.

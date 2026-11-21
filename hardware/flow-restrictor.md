@@ -19,7 +19,7 @@ An orifice restrictor consists of a cylindrical breathing tube with an internal 
   According to Bernoulli's equation with empirical discharge coefficient $C_d$:
   $$\Delta P = \frac{\rho}{2} \left( \frac{1}{C_d^2 A_o^2} - \frac{1}{A_p^2} \right) Q^2$$
   Where:
-  - $\rho \approx 1.204 \text{ kg/m}^3$ (air density at sea level, 20°C)
+  - $\rho \approx 1.204 \text{ kg/m}^3$ (air density at sea level, 20Â°C)
   - $A_p = \frac{\pi}{4} D^2$ (cross-sectional area of main pipe)
   - $A_o = \frac{\pi}{4} d^2$ (cross-sectional area of orifice)
   - $Q$ = volumetric flow rate ($\text{m}^3\text{/s}$ or $\text{L/min}$)
@@ -29,7 +29,7 @@ An orifice restrictor consists of a cylindrical breathing tube with an internal 
   $$Q = k_{\text{cal}} \cdot \text{sgn}(\Delta P) \cdot \sqrt{|\Delta P|}$$
 
 ### 2. Mesh Screen (Fleisch / Lilly Pneumotachograph Style)
-Instead of a single constriction, a fine stainless steel or nylon mesh (e.g., 200–400 mesh) is placed across the tube diameter.
+Instead of a single constriction, a fine stainless steel or nylon mesh (e.g., 200â€“400 mesh) is placed across the tube diameter.
 - **Fluid Mechanics Relation**: At low Reynolds numbers ($Re < 2000$), flow across a fine mesh is laminar and obeys the Darcy-Weisbach / Hagen-Poiseuille relationship:
   $$\Delta P = R_{\text{pneumo}} \cdot Q$$
 - The pressure drop is linearly proportional to flow rate. However, mesh screens are sensitive to moisture and saliva droplet buildup, requiring frequent drying.

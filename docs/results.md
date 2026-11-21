@@ -11,7 +11,7 @@
 
 ## 1. Zero-Pressure Baseline & Noise Characterization
 
-- **Ambient Temperature**: ________ °C
+- **Ambient Temperature**: ________ Â°C
 - **Relative Humidity**: ________ %
 - **Barometric Pressure**: ________ hPa
 - **Supply Voltage (VDD)**: ________ V
