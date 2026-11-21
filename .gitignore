@@ -1,0 +1,5 @@
+.pio/
+*.bak
+*.kicad_pcb-bak
+Thumbs.db
+.vscode/
