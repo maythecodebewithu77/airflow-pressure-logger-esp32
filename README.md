@@ -54,23 +54,23 @@ Once physical hardware bench testing is completed, replace or supplement with:
   - [x] Mechanical flow restrictor design and 3D printing guide.
   - [x] Custom KiCad 2-layer PCB design guidelines.
   - [x] Engineering design notes, calibration protocol, test plan, and blank results templates.
-- [ ] **Phase 2: Firmware Implementation** (In progress / Next)
-  - [ ] 50 Hz ADS1115 differential pressure sensor sampling.
-  - [ ] Startup zero-offset calibration and baseline drift correction.
-  - [ ] Breathing analysis state machine (BPM, peak flow, I:E ratio).
-  - [ ] Breathing pause alert (prototype) logic with sensor disconnect fault check.
-  - [ ] 1 Hz BME280 environmental acquisition and battery voltage monitor.
-  - [ ] BLE custom GATT server with notify characteristics.
-  - [ ] Demo mode (simulated breathing with pause injection) and serial debug plotter.
-- [ ] **Phase 3: Web Bluetooth Dashboard**
-  - [ ] Self-contained single-file HTML/CSS/JS dashboard.
-  - [ ] Real-time HTML5 Canvas scrolling waveform graph.
-  - [ ] Breathing pause timeline and statistics.
-  - [ ] Step-by-step zero calibration assistant.
-  - [ ] Session CSV recording and export.
-- [ ] **Phase 4: Automated Testing & Validation**
-  - [ ] Unit tests for breathing analysis algorithm on synthetic waveforms.
-  - [ ] Browser screenshot capture in light and dark mode.
+- [x] **Phase 2: Firmware Implementation** (Compiles cleanly in PlatformIO, Flash: 86.6%, RAM: 13.1%)
+  - [x] 50 Hz ADS1115 differential pressure sensor sampling.
+  - [x] Startup zero-offset calibration and baseline drift correction.
+  - [x] Breathing analysis state machine (BPM, peak flow, I:E ratio).
+  - [x] Breathing pause alert (prototype) logic with sensor disconnect fault check.
+  - [x] 1 Hz BME280 environmental acquisition and battery voltage monitor.
+  - [x] BLE custom GATT server with notify characteristics.
+  - [x] Demo mode (simulated breathing with pause injection) and serial debug plotter.
+- [x] **Phase 3: Web Bluetooth Dashboard**
+  - [x] Self-contained single-file HTML/CSS/JS dashboard (`dashboard/index.html`).
+  - [x] Real-time HTML5 Canvas scrolling waveform graph.
+  - [x] Breathing pause timeline and statistics.
+  - [x] Step-by-step zero calibration assistant.
+  - [x] Session CSV recording and export.
+- [x] **Phase 4: Automated Testing & Validation**
+  - [x] Unit tests for breathing analysis algorithm on synthetic waveforms (4/4 passed).
+  - [x] Browser screenshot capture in light and dark mode (`dashboard-demo.png`, `dashboard-demo-dark.png`).
 - [ ] **Phase 5: GitHub Publication**
   - [ ] Clean Git commit history, remote repository push, and community documentation.
 
@@ -211,4 +211,5 @@ airflow-pressure-logger-esp32/
 ## License
 - **Firmware, Software & Web Dashboard**: Licensed under the [MIT License](LICENSE).
 - **Hardware Documentation, Schematics & Guides**: Licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
 
